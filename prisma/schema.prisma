@@ -1,0 +1,40 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NotificationType {
+  ORDER
+  PAYMENT
+  DELIVERY
+  INVENTORY
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  type      NotificationType
+  title     String
+  body      String
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model ProcessedEvent {
+  eventId     String   @id @map("event_id")
+  eventType   String   @map("event_type")
+  processedAt DateTime @default(now()) @map("processed_at")
+
+  @@map("processed_events")
+}
