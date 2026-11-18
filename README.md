@@ -57,3 +57,12 @@ npm run dev
 
 `Dockerfile` + `render.yaml` (Render) y `.github/workflows/ci.yml`: compila en cada push/PR y, en `main`,
 publica la imagen en GHCR y dispara el deploy hook de Render si existe el secreto `RENDER_DEPLOY_HOOK_URL`.
+
+## Control de versiones
+
+- `main`: producción. Cada cambio que llega aquí ejecuta las pruebas y, si pasan, despliega en Render.
+- `develop`: integración de lo que viene en la próxima versión.
+- `feature/*`: una funcionalidad o cambio por rama, creada desde `develop` y unida con pull request.
+- `hotfix/*`: corrección urgente creada desde `main`.
+
+El pipeline corre en cada push y en cada pull request; el despliegue solo ocurre en `main` y depende del éxito de las pruebas.
