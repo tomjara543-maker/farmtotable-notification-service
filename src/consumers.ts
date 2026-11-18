@@ -13,8 +13,10 @@ interface Message {
   link?: string;
 }
 
+export const uniqueRecipients = (userIds: (string | undefined)[]) => [...new Set(userIds.filter((id): id is string => !!id))];
+
 async function notify(userIds: (string | undefined)[], n: Message) {
-  const ids = [...new Set(userIds.filter((id): id is string => !!id))];
+  const ids = uniqueRecipients(userIds);
   if (ids.length) await prisma.notification.createMany({ data: ids.map((userId) => ({ ...n, userId })) });
 }
 
@@ -28,7 +30,7 @@ async function admins() {
   return users.filter((u) => u.role === "ADMIN").map((u) => u.id);
 }
 
-const cop = (n: number) => `${Math.round(n).toLocaleString("es-CO")} COP`;
+export const cop = (n: number) => `${Math.round(n).toLocaleString("es-CO")} COP`;
 
 const EVENTS = [
   "user.registered",
